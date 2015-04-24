@@ -1,0 +1,10 @@
+kind: Service
+apiVersion: v1beta1
+id: nginx
+namespace: default
+port: 80
+containerPort: 80
+labels:
+  name: nginx
+selector:
+  name: nginx
