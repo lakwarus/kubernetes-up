@@ -2,6 +2,23 @@
 
 set -e
 
+echo "Pulling images..."
+echo
+docker pull kubernetes/etcd:2.0.5.1
+echo
+docker pull gcr.io/google_containers/hyperkube:v0.14.2
+echo
+docker pull quay.io/coreos/etcd:v2.0.3
+echo
+docker pull gcr.io/google_containers/kube2sky:1.2
+echo
+docker pull gcr.io/google_containers/skydns:2015-03-11-001
+echo
+docker pull nginx
+echo
+docker pull ubuntu
+
+echo
 echo -n "Starting etcd   "
 docker run --net=host -d \
   kubernetes/etcd:2.0.5.1 \
