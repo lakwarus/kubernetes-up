@@ -5,6 +5,11 @@ single node kubernetes cluster on the local machine.
 ## Compatibility
 This script was tested on an Ubuntu 14.10 box running Docker 1.6.0.
 
+## Kubernetes version
+Unfortunately this example is currently not working with kubernetes
+0.15.0 due to a port change which prevents the kubelet from talking to
+the master. Thus the previous release (0.14.2) is used.
+
 ## Example
 To fire up a single-node kubernetes cluster on your local machine all you need to do is call the ``kube-up.sh`` script:
 ```
