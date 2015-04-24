@@ -1,6 +1,7 @@
 # kubernetes-up
 The goal of this project is to provide a minimalistic script which fires up a
-single node kubernetes cluster on the local machine.
+single node [Kubernetes](http://kubernetes.io) cluster on the local machine with
+no requirements besides [Docker](http://docker.io).
 
 ## Prerequisites
 The only prerequisite for running this is Docker. You *do not* need any
@@ -9,7 +10,7 @@ Kubernetes binaries besides what's provided in this repository.
 The script was tested with Ubuntu 14.10 and Docker 1.6.0.
 
 ## Example
-To fire up a single-node kubernetes cluster on your local machine all you need to do is call the ``kube-up.sh`` script:
+To fire up a single-node Kubernetes cluster on your local machine all you need to do is call the ``kube-up.sh`` script:
 ```
 $ ./kube-up.sh
 Starting etcd   OK
@@ -81,7 +82,7 @@ Commercial support is available at
 </html>
 ```
 ## Kubernetes version
-Unfortunately this example is currently not working with kubernetes
+Unfortunately this example is currently not working with Kubernetes
 0.15.0 due to a port change which prevents the kubelet from talking to
 the master. Thus the previous release (0.14.2) is used.
 
