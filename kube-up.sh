@@ -59,7 +59,7 @@ echo -n "Waiting for API "
 while [ 1 ]
 do
   sleep 1
-  if curl http://10.0.0.1/api/v1beta3/namespaces/default/pods >/dev/null 2>&1
+  if curl -m1 http://10.0.0.1/api/v1beta3/namespaces/default/pods >/dev/null 2>&1
   then
     break
   fi
