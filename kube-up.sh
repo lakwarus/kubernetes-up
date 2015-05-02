@@ -12,7 +12,7 @@ echo "Pulling images..."
 echo
 docker pull $IMG_K8SETCD
 echo
-doicker pull $IMG_HYPERKUBE
+docker pull $IMG_HYPERKUBE
 echo
 docker pull $IMG_SKYETCD
 echo
@@ -33,6 +33,7 @@ echo -e "\e[32mOK\e[39m"
 echo -n "Starting k8s    "
 docker run --net=host -d \
   -v /var/run/docker.sock:/var/run/docker.sock \
+  -v `pwd`/hyperkube-manifests:/etc/kubernetes/manifests:ro \
   $IMG_HYPERKUBE \
   /hyperkube kubelet \
   --api_servers=http://localhost:8080 \
