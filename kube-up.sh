@@ -2,26 +2,28 @@
 
 set -e
 
+IMG_K8SETCD=kubernetes/etcd:2.0.5.1
+IMG_HYPERKUBE=gcr.io/intense-agency-88809/hyperkube:2015-04-27
+IMG_SKYETCD=quay.io/coreos/etcd:v2.0.3
+IMG_KUBE2SKY=gcr.io/intense-agency-88809/kube2sky:2015-04-27
+IMG_SKYDNS=gcr.io/intense-agency-88809/skydns:2015-04-27
+
 echo "Pulling images..."
 echo
-docker pull kubernetes/etcd:2.0.5.1
+docker pull $IMG_K8SETCD
 echo
-docker pull gcr.io/google_containers/hyperkube:v0.14.2
+doicker pull $IMG_HYPERKUBE
 echo
-docker pull quay.io/coreos/etcd:v2.0.3
+docker pull $IMG_SKYETCD
 echo
-docker pull gcr.io/google_containers/kube2sky:1.2
+docker pull $IMG_KUBE2SKY
 echo
-docker pull gcr.io/google_containers/skydns:2015-03-11-001
-echo
-docker pull nginx
-echo
-docker pull ubuntu
+docker pull $IMG_SKYDNS
 
 echo
 echo -n "Starting etcd   "
 docker run --net=host -d \
-  kubernetes/etcd:2.0.5.1 \
+  $IMG_K8SETCD \
   /usr/local/bin/etcd \
   --addr=127.0.0.1:4001 \
   --bind-addr=0.0.0.0:4001 \
@@ -31,7 +33,7 @@ echo -e "\e[32mOK\e[39m"
 echo -n "Starting k8s    "
 docker run --net=host -d \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  gcr.io/google_containers/hyperkube:v0.14.2 \
+  $IMG_HYPERKUBE \
   /hyperkube kubelet \
   --api_servers=http://localhost:8080 \
   --v=2 \
@@ -46,7 +48,7 @@ echo -e "\e[32mOK\e[39m"
 echo -n "Starting proxy  "
 docker run --net=host -d \
   --privileged \
-  gcr.io/google_containers/hyperkube:v0.14.2 \
+  $IMG_HYPERKUBE \
   /hyperkube proxy \
   --master=http://127.0.0.1:8080 \
   --v=2 >/dev/null
@@ -56,8 +58,7 @@ echo -n "Waiting for API "
 while [ 1 ]
 do
   sleep 1
-  NODES=`./kubectl get nodes 2>&1 | grep Ready || true`
-  if [ -n "$NODES" ]
+  if curl http://10.0.0.1/api/v1beta3/namespaces/default/pods >/dev/null 2>&1
   then
     break
   fi

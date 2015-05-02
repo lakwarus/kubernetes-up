@@ -9,7 +9,7 @@
       "containers": [{
         "name": "ubuntu",
         "image": "ubuntu",
-        "command": ["cat"]
+        "command": ["sleep", "3600"]
       }]
     }
   }
