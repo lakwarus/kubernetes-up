@@ -7,7 +7,9 @@ no requirements besides [Docker](http://docker.io).
 The only prerequisite for running this is Docker. You *do not* need any
 Kubernetes binaries besides what's provided in this repository.
 
-The script was tested with Ubuntu 14.10 and Docker 1.6.0.
+For the skydns availability check you additionally need ``nslookup``.
+
+The script was tested with Ubuntu 14.10 and Docker 1.6.2.
 
 ## Example
 To fire up a single-node Kubernetes cluster on your local machine all you need to do is call the ``kube-up.sh`` script:
