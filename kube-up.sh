@@ -2,11 +2,11 @@
 
 set -e
 
-IMG_K8SETCD=kubernetes/etcd:2.0.5.1
-IMG_HYPERKUBE=gcr.io/intense-agency-88809/hyperkube:2015-04-27
-IMG_SKYETCD=quay.io/coreos/etcd:v2.0.3
-IMG_KUBE2SKY=gcr.io/intense-agency-88809/kube2sky:2015-04-27
-IMG_SKYDNS=gcr.io/intense-agency-88809/skydns:2015-04-27
+IMG_K8SETCD=gcr.io/google_containers/etcd:2.0.9
+IMG_HYPERKUBE=gcr.io/google_containers/hyperkube:v0.17.0
+IMG_SKYETCD=quay.io/coreos/etcd:v2.0.9
+IMG_KUBE2SKY=gcr.io/google_containers/kube2sky:1.7
+IMG_SKYDNS=gcr.io/google_containers/skydns:2015-03-11-001
 
 echo "Pulling images..."
 echo
@@ -21,7 +21,7 @@ echo
 docker pull $IMG_SKYDNS
 
 echo
-echo -n "Starting etcd   "
+echo -n "Starting etcd    "
 docker run --net=host -d \
   $IMG_K8SETCD \
   /usr/local/bin/etcd \
@@ -30,7 +30,7 @@ docker run --net=host -d \
   --data-dir=/var/etcd/data >/dev/null
 echo -e "\e[32mOK\e[39m"
 
-echo -n "Starting k8s    "
+echo -n "Starting k8s     "
 docker run --net=host -d \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v `pwd`/hyperkube-manifests:/etc/kubernetes/manifests:ro \
@@ -46,7 +46,7 @@ docker run --net=host -d \
   --cluster_domain=kubernetes.local >/dev/null
 echo -e "\e[32mOK\e[39m"
 
-echo -n "Starting proxy  "
+echo -n "Starting proxy   "
 docker run --net=host -d \
   --privileged \
   $IMG_HYPERKUBE \
@@ -55,7 +55,7 @@ docker run --net=host -d \
   --v=2 >/dev/null
 echo -e "\e[32mOK\e[39m"
 
-echo -n "Waiting for API "
+echo -n "Waiting for API  "
 while [ 1 ]
 do
   sleep 1
@@ -66,7 +66,18 @@ do
 done
 echo -e "\e[32mOK\e[39m"
 
-echo -n "Starting skydns "
+echo -n "Starting skydns  "
 ./kubectl create -f kube-dns.rc.yaml >/dev/null
 ./kubectl create -f kube-dns.service.yaml >/dev/null
+echo -e "\e[32mOK\e[39m"
+
+echo -n "Verifying skydns "
+while [ 1 ]
+do
+  sleep 1
+  if nslookup google.com 10.0.0.10 >/dev/null 2>&1
+  then
+    break
+  fi
+done
 echo -e "\e[32mOK\e[39m"
