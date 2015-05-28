@@ -1,0 +1,11 @@
+apiVersion: v1beta3
+kind: Pod
+metadata:
+  name: ubuntu
+spec:
+  containers:
+    - name: ubuntu
+      image: ubuntu
+      command:
+        - sleep
+        - infinity
