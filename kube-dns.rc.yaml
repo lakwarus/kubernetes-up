@@ -34,13 +34,14 @@ spec:
         args:
         # command = "/kube2sky"
         - -domain=kubernetes.local
+        - -kube_master_url=http://10.0.0.1:80
       - name: skydns
         image: gcr.io/google_containers/skydns:2015-03-11-001
         args:
         # command = "/skydns"
         - -machines=http://localhost:4001
         - -addr=0.0.0.0:53
-        - -domain=kubernetes.local
+        - -domain=kubernetes.local.
         ports:
         - containerPort: 53
           name: dns
