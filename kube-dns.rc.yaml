@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: etcd
-        image: gcr.io/google_containers/etcd:2.0.9
+        image: gcr.io/google_containers/etcd:2.0.12
         command:
         - /usr/local/bin/etcd
         - -listen-client-urls
@@ -30,7 +30,7 @@ spec:
         - -initial-cluster-token
         - skydns-etcd
       - name: kube2sky
-        image: gcr.io/google_containers/kube2sky:1.7
+        image: gcr.io/google_containers/kube2sky:1.9
         args:
         # command = "/kube2sky"
         - -domain=kubernetes.local

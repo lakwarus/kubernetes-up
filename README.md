@@ -9,7 +9,7 @@ Kubernetes binaries besides what's provided in this repository.
 
 For the skydns availability check you additionally need ``nslookup``.
 
-The script was tested with Ubuntu 14.10 and Docker 1.6.2.
+The script was tested with Ubuntu 14.10, Mint 17.1 ('Rebecca') as well as with Docker 1.6.2 and Docker 1.7.0
 
 ## Example
 To fire up a single-node Kubernetes cluster on your local machine all you need to do is call the ``kube-up.sh`` script:
@@ -84,9 +84,7 @@ Commercial support is available at
 </html>
 ```
 ## Kubernetes version
-Unfortunately this example is currently not working with Kubernetes
-0.15.0 due to a port change which prevents the kubelet from talking to
-the master. Thus the previous release (0.14.2) is used.
+The example currently uses Kubernetes 18.2.
 
 ## References
 - This script is based on the instructions in the [Running kubernetes locally via Docker](https://github.com/GoogleCloudPlatform/kubernetes/blob/master/docs/getting-started-guides/docker.md) article.
