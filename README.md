@@ -24,7 +24,7 @@ Starting skydns OK
 
 Once this is done you can launch pods and services:
 ```
-$ ./kubectl create -f example/nginx.service.yaml 
+$ ./kubectl create -f example/nginx.service.yaml
 services/nginx
 $ ./kubectl create -f example/nginx.pod.yaml
 pods/nginx
@@ -84,7 +84,7 @@ Commercial support is available at
 </html>
 ```
 ## Kubernetes version
-The example currently uses Kubernetes 18.2.
+The example currently uses Kubernetes 0.18.2.
 
 ## References
 - This script is based on the instructions in the [Running kubernetes locally via Docker](https://github.com/GoogleCloudPlatform/kubernetes/blob/master/docs/getting-started-guides/docker.md) article.
