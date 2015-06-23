@@ -24,9 +24,9 @@ Starting skydns OK
 
 Once this is done you can launch pods and services:
 ```
-$ ./kubectl create -f example/nginx.service.json 
+$ ./kubectl create -f example/nginx.service.yaml 
 services/nginx
-$ ./kubectl create -f example/nginx.pod.json 
+$ ./kubectl create -f example/nginx.pod.yaml
 pods/nginx
 ```
 
