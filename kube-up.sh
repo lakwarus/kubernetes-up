@@ -2,10 +2,10 @@
 
 set -e
 
-IMG_K8SETCD=gcr.io/google_containers/etcd:2.0.9
-IMG_HYPERKUBE=gcr.io/google_containers/hyperkube:v0.17.0
-IMG_SKYETCD=quay.io/coreos/etcd:v2.0.9
-IMG_KUBE2SKY=gcr.io/google_containers/kube2sky:1.7
+IMG_K8SETCD=gcr.io/google_containers/etcd:2.0.12
+IMG_HYPERKUBE=gcr.io/google_containers/hyperkube:v0.18.2
+IMG_SKYETCD=quay.io/coreos/etcd:v2.0.12
+IMG_KUBE2SKY=gcr.io/google_containers/kube2sky:1.9
 IMG_SKYDNS=gcr.io/google_containers/skydns:2015-03-11-001
 
 echo "Pulling images..."
