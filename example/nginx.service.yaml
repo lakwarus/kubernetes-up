@@ -9,4 +9,5 @@ spec:
     - port: 80
       targetPort: http
   selector:
-    name: nginx
+    application: nginx
+    stage: dev
