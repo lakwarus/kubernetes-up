@@ -1,21 +1,22 @@
-apiVersion: v1beta3
+apiVersion: v1
 kind: ReplicationController
 metadata:
-  name: kube-dns-v1
+  name: kube-dns-v8
   namespace: default
   labels:
-    k8s-app: kube-dns-v1
+    k8s-app: kube-dns
+    version: v8
     kubernetes.io/cluster-service: "true"
 spec:
   replicas: 1
   selector:
     k8s-app: kube-dns
-    version: v1
+    version: v8
   template:
     metadata:
       labels:
         k8s-app: kube-dns
-        version: v1
+        version: v8
         kubernetes.io/cluster-service: "true"
     spec:
       containers:
@@ -23,24 +24,26 @@ spec:
         image: gcr.io/google_containers/etcd:2.0.12
         command:
         - /usr/local/bin/etcd
+        - -data-dir
+        - /var/etcd/data
         - -listen-client-urls
         - http://127.0.0.1:2379,http://127.0.0.1:4001
         - -advertise-client-urls
         - http://127.0.0.1:2379,http://127.0.0.1:4001
         - -initial-cluster-token
         - skydns-etcd
+        volumeMounts:
+        - name: etcd-storage
+          mountPath: /var/etcd/data
       - name: kube2sky
-        image: gcr.io/google_containers/kube2sky:1.9
+        image: gcr.io/google_containers/kube2sky:1.11
         args:
-        # command = "/kube2sky"
         - -domain=kubernetes.local
-        - -kube_master_url=http://10.0.0.1:80
+        - -kube_master_url=http://10.0.0.1:8080
         - -v=2
       - name: skydns
         image: gcr.io/google_containers/skydns:2015-03-11-001
-        # image: skynetservices/skydns:latest
         args:
-        # command = "/skydns"
         - -machines=http://localhost:4001
         - -addr=0.0.0.0:53
         - -domain=kubernetes.local.
@@ -52,13 +55,9 @@ spec:
         - containerPort: 53
           name: dns-tcp
           protocol: TCP
-          # Currently broken, leads to skydns restarts every 30s!
-          # livenessProbe:
-          #   exec:
-          #     command:
-          #     - /bin/sh
-          #     - -c
-          #     - nslookup kubernetes.default.kubernetes.local localhost >/dev/null
-          #   initialDelaySeconds: 30
-          #   timeoutSeconds: 5
+      volumes:
+      - name: etcd-storage
+        emptyDir: {}
       dnsPolicy: Default  # Don't use cluster DNS.
+      serviceAccount: "default"
+      serviceAccountName: "default"

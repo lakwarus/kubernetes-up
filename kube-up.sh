@@ -1,24 +1,30 @@
 #!/bin/bash
 
+# Fail on all errors
 set -e
 
 IMG_K8SETCD=gcr.io/google_containers/etcd:2.0.12
-IMG_HYPERKUBE=gcr.io/google_containers/hyperkube:v0.18.2
+IMG_HYPERKUBE=gcr.io/google_containers/hyperkube:v1.0.1
 IMG_SKYETCD=quay.io/coreos/etcd:v2.0.12
 IMG_KUBE2SKY=gcr.io/google_containers/kube2sky:1.9
 IMG_SKYDNS=gcr.io/google_containers/skydns:2015-03-11-001
 
-echo "Pulling images..."
-echo
-docker pull $IMG_K8SETCD
-echo
-docker pull $IMG_HYPERKUBE
-echo
-docker pull $IMG_SKYETCD
-echo
-docker pull $IMG_KUBE2SKY
-echo
-docker pull $IMG_SKYDNS
+if [ $NO_PULL ]
+then
+  echo "Skipping image pull"
+else
+  echo "Pulling images..."
+  echo
+  docker pull $IMG_K8SETCD
+  echo
+  docker pull $IMG_HYPERKUBE
+  echo
+  docker pull $IMG_SKYETCD
+  echo
+  docker pull $IMG_KUBE2SKY
+  echo
+  docker pull $IMG_SKYDNS
+fi
 
 echo
 echo -n "Starting etcd    "
@@ -31,34 +37,44 @@ docker run --net=host -d \
 echo -e "\e[32mOK\e[39m"
 
 echo -n "Starting k8s     "
-docker run --net=host -d \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  $IMG_HYPERKUBE \
-  /hyperkube kubelet \
-  --api_servers=http://localhost:8080 \
-  --v=2 \
-  --address=0.0.0.0 \
-  --enable_server \
-  --hostname_override=127.0.0.1 \
-  --config=/etc/kubernetes/manifests \
-  --cluster_dns=10.0.0.10 \
-  --cluster_domain=kubernetes.local >/dev/null
+docker run \
+    --volume=/:/rootfs:ro \
+    --volume=/sys:/sys:ro \
+    --volume=/dev:/dev \
+    --volume=/var/lib/docker/:/var/lib/docker:ro \
+    --volume=/var/lib/kubelet/:/var/lib/kubelet:rw \
+    --volume=/var/run:/var/run:rw \
+    --volume=$(pwd)/master.json:/etc/kubernetes/manifests/master.json \
+    --net=host \
+    --privileged=true \
+    -d \
+    $IMG_HYPERKUBE \
+    /hyperkube kubelet \
+    --containerized \
+    --address="0.0.0.0" \
+    --hostname-override="127.0.0.1" \
+    --api-servers=http://localhost:8080 \
+    --config=/etc/kubernetes/manifests \
+    --cluster_dns=10.0.0.10 \
+    --cluster_domain=kubernetes.local \
+    >/dev/null
 echo -e "\e[32mOK\e[39m"
 
 echo -n "Starting proxy   "
-docker run --net=host -d \
+docker run \
+  -d \
+  --net=host \
   --privileged \
   $IMG_HYPERKUBE \
-  /hyperkube proxy \
-  --master=http://127.0.0.1:8080 \
-  --v=2 >/dev/null
+  /hyperkube proxy --master=http://127.0.0.1:8080 --v=2 \
+  >/dev/null
 echo -e "\e[32mOK\e[39m"
 
 echo -n "Waiting for API  "
 while [ 1 ]
 do
   sleep 1
-  if curl -m1 http://10.0.0.1/api/v1beta3/namespaces/default/pods >/dev/null 2>&1
+  if curl -m1 http://127.0.0.1:8080/api/v1/namespaces/default/pods >/dev/null 2>&1
   then
     break
   fi
