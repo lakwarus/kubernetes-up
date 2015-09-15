@@ -44,19 +44,15 @@ docker run \
     --volume=/var/lib/docker/:/var/lib/docker:ro \
     --volume=/var/lib/kubelet/:/var/lib/kubelet:rw \
     --volume=/var/run:/var/run:rw \
-    --volume=$(pwd)/master.json:/etc/kubernetes/manifests/master.json \
     --net=host \
     --privileged=true \
     -d \
     $IMG_HYPERKUBE \
     /hyperkube kubelet \
     --containerized \
-    --address="0.0.0.0" \
     --hostname-override="127.0.0.1" \
     --api-servers=http://localhost:8080 \
     --config=/etc/kubernetes/manifests \
-    --cluster_dns=10.0.0.10 \
-    --cluster_domain=kubernetes.local \
     >/dev/null
 echo -e "\e[32mOK\e[39m"
 
@@ -74,23 +70,7 @@ echo -n "Waiting for API  "
 while [ 1 ]
 do
   sleep 1
-  if curl -m1 http://127.0.0.1:8080/api/v1/namespaces/default/pods >/dev/null 2>&1
-  then
-    break
-  fi
-done
-echo -e "\e[32mOK\e[39m"
-
-echo -n "Starting skydns  "
-./kubectl create -f kube-dns.rc.yaml >/dev/null
-./kubectl create -f kube-dns.service.yaml >/dev/null
-echo -e "\e[32mOK\e[39m"
-
-echo -n "Verifying skydns "
-while [ 1 ]
-do
-  sleep 1
-  if nslookup google.com 10.0.0.10 >/dev/null 2>&1
+  if curl -m1 http://localhost:8080/api/v1/namespaces/default/pods >/dev/null 2>&1
   then
     break
   fi
