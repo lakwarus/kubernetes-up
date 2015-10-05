@@ -70,11 +70,13 @@ echo -n "Starting skydns  "
 ./kubectl create -f kube-dns.service.yaml >/dev/null
 echo -e "\e[32mOK\e[39m"
 
+#get dns service ip
+service_ip=`kubectl get services |grep kube-dns | awk '{print $4}'`
 echo -n "Verifying skydns "
 while [ 1 ]
 do
   sleep 1
-  if nslookup google.com 10.0.0.10 >/dev/null 2>&1
+  if nslookup google.com ${service_ip} >/dev/null 2>&1
   then
     break
   fi
