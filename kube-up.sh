@@ -3,7 +3,7 @@
 set -e
 
 IMG_K8SETCD=gcr.io/google_containers/etcd:2.0.12
-IMG_HYPERKUBE=gcr.io/google_containers/hyperkube:v0.18.2
+IMG_HYPERKUBE=gcr.io/google_containers/hyperkube:v1.0.1
 IMG_SKYETCD=quay.io/coreos/etcd:v2.0.12
 IMG_KUBE2SKY=gcr.io/google_containers/kube2sky:1.9
 IMG_SKYDNS=gcr.io/google_containers/skydns:2015-03-11-001
@@ -58,7 +58,7 @@ echo -n "Waiting for API  "
 while [ 1 ]
 do
   sleep 1
-  if curl -m1 http://10.0.0.1/api/v1beta3/namespaces/default/pods >/dev/null 2>&1
+  if curl -m1 http://127.0.0.1:8080/api/v1/namespaces/default/pods >/dev/null 2>&1
   then
     break
   fi
