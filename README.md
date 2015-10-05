@@ -84,7 +84,7 @@ Commercial support is available at
 </html>
 ```
 ## Kubernetes version
-The example currently uses Kubernetes 0.18.2.
+The example currently uses Kubernetes 1.0.1.
 
 ## References
 - This script is based on the instructions in the [Running kubernetes locally via Docker](https://github.com/GoogleCloudPlatform/kubernetes/blob/master/docs/getting-started-guides/docker.md) article.
