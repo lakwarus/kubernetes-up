@@ -33,7 +33,7 @@ spec:
         image: gcr.io/google_containers/kube2sky:1.9
         args:
         # command = "/kube2sky"
-        - -domain=kubernetes.local
+        - -domain=cluster.local
         - -kube_master_url=http://127.0.0.1:8080
         - -v=2
       - name: skydns
@@ -43,7 +43,7 @@ spec:
         # command = "/skydns"
         - -machines=http://localhost:4001
         - -addr=0.0.0.0:53
-        - -domain=kubernetes.local.
+        - -domain=cluster.local.
         - -verbose=true
         ports:
         - containerPort: 53
@@ -58,7 +58,7 @@ spec:
           #     command:
           #     - /bin/sh
           #     - -c
-          #     - nslookup kubernetes.default.kubernetes.local localhost >/dev/null
+          #     - nslookup kubernetes.default.cluster.local localhost >/dev/null
           #   initialDelaySeconds: 30
           #   timeoutSeconds: 5
       dnsPolicy: Default  # Don't use cluster DNS.

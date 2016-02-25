@@ -3,22 +3,22 @@
 set -e
 
 IMG_K8SETCD=gcr.io/google_containers/etcd:2.0.12
-IMG_HYPERKUBE=gcr.io/google_containers/hyperkube:v1.1.7
+IMG_HYPERKUBE=gcr.io/google_containers/hyperkube:v1.1.3
 IMG_SKYETCD=quay.io/coreos/etcd:v2.0.12
 IMG_KUBE2SKY=gcr.io/google_containers/kube2sky:1.9
 IMG_SKYDNS=gcr.io/google_containers/skydns:2015-03-11-001
 
-echo "Pulling images..."
-echo
-docker pull $IMG_K8SETCD
-echo
-docker pull $IMG_HYPERKUBE
-echo
-docker pull $IMG_SKYETCD
-echo
-docker pull $IMG_KUBE2SKY
-echo
-docker pull $IMG_SKYDNS
+#echo "Pulling images..."
+#echo
+#docker pull $IMG_K8SETCD
+#echo
+#docker pull $IMG_HYPERKUBE
+#echo
+#docker pull $IMG_SKYETCD
+#echo
+#docker pull $IMG_KUBE2SKY
+#echo
+#docker pull $IMG_SKYDNS
 
 echo
 echo -n "Starting etcd    "
@@ -39,7 +39,15 @@ docker run \
     --privileged=true \
     -d \
     ${IMG_HYPERKUBE} \
-    /hyperkube kubelet --containerized --hostname-override="127.0.0.1" --address="0.0.0.0" --api-servers=http://localhost:8080 --config=/etc/kubernetes/manifests
+    /hyperkube kubelet \
+	--containerized \
+	--hostname-override="127.0.0.1" \
+	--address="0.0.0.0" \
+	--api-servers=http://localhost:8080 \
+	--config=/etc/kubernetes/manifests \
+	--cluster-dns=10.0.0.10 \
+	--cluster-domain=cluster.local \
+	--allow-privileged=true --v=2
 echo -e "\e[32mOK\e[39m"
 
 echo -n "Starting proxy   "
